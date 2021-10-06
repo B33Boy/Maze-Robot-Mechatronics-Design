@@ -4,18 +4,12 @@
 
 Motors::Motors()
 {
-	pinMode(enA, OUTPUT);
-	pinMode(enB, OUTPUT);
-	pinMode(in1, OUTPUT);
-	pinMode(in2, OUTPUT);
-	pinMode(in3, OUTPUT);
-	pinMode(in4, OUTPUT);
-	
-	// Turn off motors - Initial state
-	digitalWrite(in1, LOW);
-	digitalWrite(in2, LOW);
-	digitalWrite(in3, LOW);
-	digitalWrite(in4, LOW);
+	pinMode(ENA, OUTPUT);
+	pinMode(ENB, OUTPUT);
+	pinMode(IN1, OUTPUT);
+	pinMode(IN2, OUTPUT);
+	pinMode(IN3, OUTPUT);
+	pinMode(IN4, OUTPUT);
 
     stop();
 
@@ -23,13 +17,13 @@ Motors::Motors()
 
 void Motors::stop()
 {
-  digitalWrite(in1, LOW);
-  digitalWrite(in2, LOW);
-  analogWrite(enA, 0);
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, LOW);
+  analogWrite(ENA, 0);
 
-  digitalWrite(in3, LOW);
-  digitalWrite(in4, LOW);
-  analogWrite(enB, 0);
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, LOW);
+  analogWrite(ENB, 0);
 }
 
 void Motors::drive(int speed)
@@ -75,31 +69,30 @@ void Motors::turn_right()
 
 
 
-
 void Motors::left_motor_fwd(uint8_t speed)
 {
-  digitalWrite(in1, HIGH);
-  digitalWrite(in2, LOW);
-  analogWrite(enA, speed);
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+  analogWrite(ENA, speed);
 }
 
 void Motors::right_motor_fwd(uint8_t speed)
 {
-  digitalWrite(in4, HIGH);
-  digitalWrite(in3, LOW);
-  analogWrite(enB, speed);
+  digitalWrite(IN4, HIGH);
+  digitalWrite(IN3, LOW);
+  analogWrite(ENB, speed);
 }
 
 void Motors::left_motor_rev(uint8_t speed)
 {
-  digitalWrite(in1, LOW);
-  digitalWrite(in2, HIGH);
-  analogWrite(enA, speed);
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, HIGH);
+  analogWrite(ENA, speed);
 }
 
 void Motors::right_motor_rev(uint8_t speed)
 {
-  digitalWrite(in4, LOW);
-  digitalWrite(in3, HIGH);
-  analogWrite(enB, speed);
+  digitalWrite(IN4, LOW);
+  digitalWrite(IN3, HIGH);
+  analogWrite(ENB, speed);
 }

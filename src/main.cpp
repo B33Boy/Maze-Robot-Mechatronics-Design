@@ -7,6 +7,7 @@ Motors motors;
 void setup()
 {
      // Stops both motors
+
 }
 
 void loop()
@@ -16,6 +17,8 @@ void loop()
 
     motors.drive(100);
     delay(2000); 
+
+
      
     motors.stop();   
 }

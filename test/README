@@ -9,3 +9,11 @@ in the development cycle.
 
 More information about PlatformIO Unit Testing:
 - https://docs.platformio.org/page/plus/unit-testing.html
+
+Test Code That Works
+- [X] Encoders
+- [ ] Encoders with port manipulation
+- [X] Motors
+- [ ] Motors with port manipulation
+- [ ] Motor PID control for going in straight line
+- [X] Servo

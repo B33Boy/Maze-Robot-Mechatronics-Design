@@ -32,7 +32,7 @@ void setup()
     attachInterrupt(digitalPinToInterrupt(ENC_L_CH_A), enc_r_isr_a, CHANGE); // Use RISING For Method 1
     attachInterrupt(digitalPinToInterrupt(ENC_L_CH_B), enc_l_isr_b, CHANGE); // Use RISING FOr Method 1
 
-    Serial.begin(250000);
+    Serial.begin(9600);
 }
 
 

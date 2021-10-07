@@ -7,6 +7,7 @@ int angle = 0;  // servo position in degrees
 
 void setup() {
     servo.attach(servoPin);
+    Serial.begin(9600);
 }
 
 void loop() {

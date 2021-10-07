@@ -26,7 +26,7 @@ volatile unsigned long enc_r = 0;
 void setup() {
 
   // Debug
-  Serial.begin(250000);
+  Serial.begin(9600);
 
   // Set up pins
   pinMode(enc_l_pin, INPUT_PULLUP);

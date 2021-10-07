@@ -10,13 +10,12 @@ long enc_r_count = 0;
 long enc_l_count = 0;
 
 
-// Declare 
+// Declare Functions
 void enc_r_isr();
 void enc_l_isr();
 
 void setup()
 {
-    Serial.println("Initalizing");
     pinMode(ENC_R_CH_A, INPUT_PULLUP);
     pinMode(ENC_R_CH_B, INPUT_PULLUP);
     
@@ -25,7 +24,8 @@ void setup()
 
     attachInterrupt(digitalPinToInterrupt(ENC_R_CH_A), enc_r_isr, CHANGE); // Rising For Method 1
     attachInterrupt(digitalPinToInterrupt(ENC_L_CH_A), enc_l_isr, CHANGE); // Rising FOr Method 1
-    Serial.begin(250000);
+    Serial.begin(9600);
+    Serial.println("Initalizing");
 }
 
 

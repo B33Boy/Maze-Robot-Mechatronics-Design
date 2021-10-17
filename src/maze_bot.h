@@ -1,4 +1,5 @@
-#pragma once
+#ifndef MAZE_BOT_H
+#define MAZE_BOT_H
 
 // Motor R connections
 #define ENA 7
@@ -10,53 +11,57 @@
 #define IN3 12
 #define IN4 13
 
+// Motor R Encoder
+#define ENC_R_CH_A 56
+#define ENC_R_CH_B 57
 
-// Encoder R Connections
-#define ENC_R_CH_A 55
-#define ENC_R_CH_B 54
+// Motor L Encoder
+#define ENC_L_CH_A 55
+#define ENC_L_CH_B 54
 
-// Encoder L Connections
-#define ENC_L_CH_A 56
-#define ENC_L_CH_B 57
+// Sensors
+#define L_SENSOR A7
+#define FL_SENSOR A6
+#define FR_SENSOR A5
+#define R_SENSOR A4
 
-
-
-class Motors
-{
-    public:
-        Motors();
-        void stop();
-        void drive(int speed);
-        void drive(int speed, uint32_t duration);
-
-        void turn_left();
-        void turn_right();
+//Sensor GPIO1 Standby Pins
+#define L_GPIO1 A11
+#define FL_GPIO1 A10
+#define FR_GPIO1 A9
+#define R_GPIO1 A8
 
 
-    private:
-        uint8_t _speed;
+// PID
+#define DESIRED_DIST 15
+#define COLLISION_DIST 10
+#define BASE_SPEED 150
+#define KP 2
+#define KI 0
+#define KD 0
 
-        void left_motor_fwd(uint8_t speed);
-        void right_motor_fwd(uint8_t speed);
-        void left_motor_rev(uint8_t speed);
-        void right_motor_rev(uint8_t speed);
-};
+extern float error;
+extern float error_sum;
+extern float error_change;
+extern float prev_error;
 
+extern int speedL, speedR;
 
-// class Encoders
-// {
-//     public:
-//         Encoders();
-//         void getTicks();
-//         void printTicks();
-//         static void enc_r_isr();
-//         static void enc_l_isr();
-
-//     private:
-//         long enc_r_count = 0;
-//         long enc_l_count = 0;
-
-// };
+// Global Variables
+extern long enc_r_count;
+extern long enc_l_count;
+const int SENSOR_SAMPLES = 15;
 
 
-// duetimers
+// Declare Functions
+float read_sensor(int sensor_pin, int GPIO1PIN);
+void stop();
+void forward();
+void enc_r_isr();
+void enc_l_isr();
+
+bool obstacle_left();
+bool obstacle_forward();
+bool obstacle_right();
+
+#endif

@@ -45,27 +45,38 @@ void loop()
     // Serial.println();
     // delay(50);
 
-    float l_sensor = read_sensor(L_SENSOR);
-    // float fr_sensor = read_sensor(FR_SENSOR);
-    // float fr_sensor = read_sensor(FR_SENSOR);
-    // float r_sensor = read_sensor(R_SENSOR);
-    Serial.println(l_sensor);
+    // float l_sensor = read_sensor(L_SENSOR, L_GPIO1);
+    // float fl_sensor = read_sensor(FL_SENSOR,  FL_GPIO1);
+    // float fr_sensor = read_sensor(FR_SENSOR,  FR_GPIO1);
+    float r_sensor = read_sensor(R_SENSOR,  R_GPIO1);
+    Serial.println(r_sensor);
+    delay(100);
 
 }
 
 
-float read_sensor(int sensor_pin)
+float read_sensor(int sensor_pin, int GPIO1PIN)
 {
-    digitalWrite(L_GPIO1, HIGH); // Turn on sensor
+    digitalWrite(GPIO1PIN, HIGH); // Turn on sensor
     unsigned int sensor_sum = 0;
     for (int i=0; i<SENSOR_SAMPLES; i++)
     {
         sensor_sum += analogRead(sensor_pin);
     }
-    return (sensor_sum/SENSOR_SAMPLES)*(-0.12) + 86.9; // m and b values obtained from data collected at x=40cm to 
+    //L
+    // return (sensor_sum/SENSOR_SAMPLES)*(-0.12) + 86.9;
     
+    //FL
+    // return (sensor_sum/SENSOR_SAMPLES)*(-0.0978) + 71.7;
+
+    //FR
+    // return (sensor_sum/SENSOR_SAMPLES)*(-0.0979) + 71.5;
+
+    //R
+    return (sensor_sum/SENSOR_SAMPLES)*(-0.116) + 81;
+
     // Uncomment the following line for raw data
     // return sensor_sum/SENSOR_SAMPLES;
 
-    digitalWrite(L_GPIO1, LOW); // Turn off sensor
+    digitalWrite(GPIO1PIN, LOW); // Turn off sensor
 }

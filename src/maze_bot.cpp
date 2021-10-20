@@ -13,6 +13,48 @@ float prev_error = 0;
 
 int speedL, speedR = 0;
 
+void follow_wall()
+{
+    float left_dist = read_sensor(L_SENSOR, L_GPIO1);
+  
+    error = DESIRED_DIST - left_dist;
+    error_sum += error;
+    int pid = KP*error + KI*error_sum + KD*(error - prev_error);
+    prev_error = error;
+
+    Serial.println("PID: " + String(pid) + " | " + String(left_dist));
+
+    //  Make sure PID value does not exceed bounds
+    if(pid < -SPEED_CORRECTION){
+        pid = -SPEED_CORRECTION;
+    }
+    if(pid > SPEED_CORRECTION){
+        pid = SPEED_CORRECTION;
+    }
+
+    if (error > 0)
+    {
+        speedL = FWD_VEL + pid;
+        speedR = FWD_VEL - pid;
+    }
+    else
+    {
+        speedL = FWD_VEL - pid;
+        speedR = FWD_VEL + pid;
+    }
+
+    Serial.println("SpeedL: " + String(speedL) + " SpeedR: " + String(speedR));
+    
+    analogWrite(ENA, speedL);
+	analogWrite(ENB, speedR);
+
+    digitalWrite(IN1, HIGH);
+	digitalWrite(IN2, LOW);
+	digitalWrite(IN3, LOW);
+	digitalWrite(IN4, HIGH);
+
+    delay(50);
+}
 
 bool obstacle_left()
 {
@@ -94,6 +136,14 @@ void forward()
 	digitalWrite(IN4, HIGH);
 	
 }
+
+// void lmotor(int speed, int dir)
+// {
+//     analogWrite(ENA, speed);
+//     digitalWrite(IN1, HIGH);
+// 	digitalWrite(IN2, LOW);
+// }
+
 
 void stop()
 {

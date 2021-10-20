@@ -33,10 +33,12 @@
 
 
 // PID
-#define DESIRED_DIST 15
+#define DESIRED_DIST 18
 #define COLLISION_DIST 10
-#define BASE_SPEED 150
-#define KP 2
+#define FWD_VEL 100
+#define TURN_RATE 100
+#define SPEED_CORRECTION 40
+#define KP 4
 #define KI 0
 #define KD 0
 
@@ -63,5 +65,7 @@ void enc_l_isr();
 bool obstacle_left();
 bool obstacle_forward();
 bool obstacle_right();
+
+void follow_wall();
 
 #endif

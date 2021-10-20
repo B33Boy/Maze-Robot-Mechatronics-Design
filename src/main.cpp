@@ -2,9 +2,6 @@
 #include <Servo.h>
 #include "maze_bot.h"
 
-
-
-
 void setup()
 {
     // Encoder Setup
@@ -60,10 +57,14 @@ void loop()
     // Serial.println("r_sensor" + String(r_sensor));
     // delay(250);
 
-    Serial.println(String(obstacle_left()) + " " + String(obstacle_forward()) + " " + String(obstacle_right()));
+    // Serial.println(String(obstacle_left()) + " " + String(obstacle_forward()) + " " + String(obstacle_right()));
     
+    follow_wall();
+    // forward();
+    // delay(3000);
 
-
+    // stop();
+    // delay(4000);
 
 }
 

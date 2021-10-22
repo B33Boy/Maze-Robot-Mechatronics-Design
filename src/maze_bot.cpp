@@ -16,8 +16,10 @@ int speedL, speedR = 0;
 void follow_wall()
 {
     float left_dist = read_sensor(L_SENSOR, L_GPIO1);
-  
-    error = DESIRED_DIST - left_dist;
+    // Desired dist is mid_dist
+    float mid_dist = (read_sensor(L_SENSOR, L_GPIO1) + read_sensor(FR_SENSOR, FR_GPIO1))/2.0;
+    
+    error = mid_dist - left_dist;
     error_sum += error;
     float motor_power = KP*error + KI*error_sum + KD*(error - prev_error);
     prev_error = error;
@@ -26,15 +28,6 @@ void follow_wall()
     
     speed_control(motor_power);
 
-    // analogWrite(ENA, speedL);
-	// analogWrite(ENB, speedR);
-
-    // digitalWrite(IN1, HIGH);
-	// digitalWrite(IN2, LOW);
-	// digitalWrite(IN3, LOW);
-	// digitalWrite(IN4, HIGH);
-
-    // delay(50);
 }
 
 float motor_base(float desired_dist)

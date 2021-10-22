@@ -46,7 +46,6 @@ float errorD;
 float previousErrorD = 0;
 float dt = 0.1;
 
-//
 float distance1, distance2, currentDistance, integral, derivative, outputD, outputA, angle, previousAngle=0.0, allign_angle=0.0;
 int region, pidDist, speedL, speedR, distance;
 
@@ -84,14 +83,14 @@ int check_region(float read1, float read2){
   distance = current_distance(read1, read2);
   if(abs(distance-INPUT_DISTANCE)>ERROR_DIST){
     if(distance > INPUT_DISTANCE){
-        return -1; //for left movement
-      }else{
-        return 1; //for right movement
-        }
+      return -1; //for left movement
     }else{
+      return 1; //for right movement
+    }
+  }else{
       return 0; //inside region
-      }
   }
+}
 
 //steers the robot to reach at the specified distance
 void reach_distance(){
@@ -104,6 +103,7 @@ void reach_distance(){
   integral += errorD;
   outputD = kp_d*errorD + ki_d*integral*dt + kd_d*derivative;
   previousErrorD = errorD;
+  
   speedL = SPEED - (int)outputD;
   speedR = SPEED + (int)outputD;
   //right turn 

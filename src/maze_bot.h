@@ -34,11 +34,17 @@
 
 // PID
 #define DESIRED_DIST 18
-#define COLLISION_DIST 10
-#define FWD_VEL 100
+#define FWD_VEL 120
 #define TURN_RATE 100
-#define SPEED_CORRECTION 40
-#define KP 4
+
+#define COLLISION_DIST 10
+#define MAX_SPEED_DIFF 40
+#define SPEED_CORRECTION 50
+
+#define MIN_SPEED 100
+#define MAX_SPEED 255
+
+#define KP 6
 #define KI 0
 #define KD 0
 
@@ -66,6 +72,9 @@ bool obstacle_left();
 bool obstacle_forward();
 bool obstacle_right();
 
+
 void follow_wall();
+float motor_base(float desired_dist);
+void speed_control(float motor_power);
 
 #endif

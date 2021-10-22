@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <Servo.h>
 #include "maze_bot.h"
+// #include <DueTimer.h>
 
 void setup()
 {
@@ -61,7 +62,7 @@ void loop()
     
     follow_wall();
     // forward();
-    // delay(3000);
+    delay(50);
 
     // stop();
     // delay(4000);

@@ -19,32 +19,70 @@ void follow_wall()
   
     error = DESIRED_DIST - left_dist;
     error_sum += error;
-    int pid = KP*error + KI*error_sum + KD*(error - prev_error);
+    float motor_power = KP*error + KI*error_sum + KD*(error - prev_error);
     prev_error = error;
 
-    Serial.println("PID: " + String(pid) + " | " + String(left_dist));
+    // Serial.println("PID: " + String(motor_power) + " | " + String(left_dist));
+    
+    speed_control(motor_power);
 
-    //  Make sure PID value does not exceed bounds
-    if(pid < -SPEED_CORRECTION){
-        pid = -SPEED_CORRECTION;
-    }
-    if(pid > SPEED_CORRECTION){
-        pid = SPEED_CORRECTION;
-    }
+    // analogWrite(ENA, speedL);
+	// analogWrite(ENB, speedR);
 
-    if (error > 0)
-    {
-        speedL = FWD_VEL + pid;
-        speedR = FWD_VEL - pid;
-    }
-    else
-    {
-        speedL = FWD_VEL - pid;
-        speedR = FWD_VEL + pid;
-    }
+    // digitalWrite(IN1, HIGH);
+	// digitalWrite(IN2, LOW);
+	// digitalWrite(IN3, LOW);
+	// digitalWrite(IN4, HIGH);
+
+    // delay(50);
+}
+
+float motor_base(float desired_dist)
+{
+
+    return 0;
+
+}
+
+void speed_control(float motor_power)
+{
+    speedL = FWD_VEL + motor_power;
+    speedR = FWD_VEL - motor_power;
+    
+
+    // //  Make sure speed values don't exceed bounds
+    // if(speedL < 0){
+    //     speedL = FWD_VEL - SPEED_CORRECTION;
+    // }
+    // else if(speedL > 255)
+    // {
+    //     speedL = FWD_VEL + SPEED_CORRECTION;
+    // }
+
+    // // Restrict speedR to 
+    // if(speedR < 0){
+    //     speedR = FWD_VEL - SPEED_CORRECTION;
+    // }
+    // else if(speedL > 255)
+    // {
+    //     speedR = FWD_VEL + SPEED_CORRECTION;
+    // }
+
+    // Make sure speeds are within a range
+    speedL = constrain(speedL, MIN_SPEED, MAX_SPEED);
+    speedR = constrain(speedR, MIN_SPEED, MAX_SPEED);
+
+    // // Make sure both speeds don't differ by an absurd amount
+    
+    // if (abs(speedL - speedR) > MAX_SPEED_DIFF)
+    // {
+    //     speedL = FWD_VEL + MAX_SPEED_DIFF;
+    //     speedR = FWD_VEL - MAX_SPEED_DIFF;
+    // }
+
 
     Serial.println("SpeedL: " + String(speedL) + " SpeedR: " + String(speedR));
-    
+
     analogWrite(ENA, speedL);
 	analogWrite(ENB, speedR);
 
@@ -53,7 +91,6 @@ void follow_wall()
 	digitalWrite(IN3, LOW);
 	digitalWrite(IN4, HIGH);
 
-    delay(50);
 }
 
 bool obstacle_left()
@@ -121,7 +158,7 @@ float read_sensor(int SENSOR_PIN, int GPIO1_PIN)
             return 0;
     }
 
-    digitalWrite(GPIO1_PIN, LOW); // Turn off sensor
+    // digitalWrite(GPIO1_PIN, LOW); // Turn off sensor
 }
 
 void forward()
@@ -136,14 +173,6 @@ void forward()
 	digitalWrite(IN4, HIGH);
 	
 }
-
-// void lmotor(int speed, int dir)
-// {
-//     analogWrite(ENA, speed);
-//     digitalWrite(IN1, HIGH);
-// 	digitalWrite(IN2, LOW);
-// }
-
 
 void stop()
 {

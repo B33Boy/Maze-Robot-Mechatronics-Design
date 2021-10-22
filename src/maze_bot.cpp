@@ -15,9 +15,16 @@ int speedL, speedR = 0;
 
 void follow_wall()
 {
+    // // PID using left sensor
+    // float left_dist = read_sensor(L_SENSOR, L_GPIO1);
+    // error = DESIRED_DIST - left_dist;
+
+    // PID using left and right sensor
     float left_dist = read_sensor(L_SENSOR, L_GPIO1);
-  
-    error = DESIRED_DIST - left_dist;
+    // Desired distance = mid_dist
+    float mid_dist = (read_sensor(L_SENSOR, L_GPIO1) + read_sensor(FR_SENSOR, FR_GPIO1))/2.0; // TODO: Change FR to R when sensor is fixed
+    error = mid_dist - left_dist;
+
     error_sum += error;
     float motor_power = KP*error + KI*error_sum + KD*(error - prev_error);
     prev_error = error;

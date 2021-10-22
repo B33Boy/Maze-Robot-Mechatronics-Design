@@ -44,9 +44,9 @@
 #define MIN_SPEED 100
 #define MAX_SPEED 255
 
-#define KP 6
-#define KI 0
-#define KD 0
+#define KP 9
+#define KI 3
+#define KD 5
 
 extern float error;
 extern float error_sum;

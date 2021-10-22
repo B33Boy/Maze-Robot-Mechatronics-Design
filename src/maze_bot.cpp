@@ -26,60 +26,16 @@ void follow_wall()
     
     speed_control(motor_power);
 
-    // analogWrite(ENA, speedL);
-	// analogWrite(ENB, speedR);
-
-    // digitalWrite(IN1, HIGH);
-	// digitalWrite(IN2, LOW);
-	// digitalWrite(IN3, LOW);
-	// digitalWrite(IN4, HIGH);
-
-    // delay(50);
-}
-
-float motor_base(float desired_dist)
-{
-
-    return 0;
-
-}
+ }
 
 void speed_control(float motor_power)
 {
     speedL = FWD_VEL + motor_power;
     speedR = FWD_VEL - motor_power;
     
-
-    // //  Make sure speed values don't exceed bounds
-    // if(speedL < 0){
-    //     speedL = FWD_VEL - SPEED_CORRECTION;
-    // }
-    // else if(speedL > 255)
-    // {
-    //     speedL = FWD_VEL + SPEED_CORRECTION;
-    // }
-
-    // // Restrict speedR to 
-    // if(speedR < 0){
-    //     speedR = FWD_VEL - SPEED_CORRECTION;
-    // }
-    // else if(speedL > 255)
-    // {
-    //     speedR = FWD_VEL + SPEED_CORRECTION;
-    // }
-
     // Make sure speeds are within a range
     speedL = constrain(speedL, MIN_SPEED, MAX_SPEED);
     speedR = constrain(speedR, MIN_SPEED, MAX_SPEED);
-
-    // // Make sure both speeds don't differ by an absurd amount
-    
-    // if (abs(speedL - speedR) > MAX_SPEED_DIFF)
-    // {
-    //     speedL = FWD_VEL + MAX_SPEED_DIFF;
-    //     speedR = FWD_VEL - MAX_SPEED_DIFF;
-    // }
-
 
     Serial.println("SpeedL: " + String(speedL) + " SpeedR: " + String(speedR));
 

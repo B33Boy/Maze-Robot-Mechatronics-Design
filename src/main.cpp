@@ -1,7 +1,12 @@
 #include <Arduino.h>
 #include <Servo.h>
 #include "maze_bot.h"
-// #include <DueTimer.h>
+#include <DueTimer.h>
+
+void handler_isr()
+{
+    follow_wall();
+}
 
 void setup()
 {
@@ -44,6 +49,8 @@ void setup()
     // When program starts, turn off all motors 
     stop();
 
+    Timer8.attachInterrupt(handler_isr);
+	Timer8.start(50000); // Calls every 50ms
     
 
 }
@@ -60,9 +67,9 @@ void loop()
 
     // Serial.println(String(obstacle_left()) + " " + String(obstacle_forward()) + " " + String(obstacle_right()));
     
-    follow_wall();
+    // follow_wall();
     // forward();
-    delay(50);
+    // delay(50);
 
     // stop();
     // delay(4000);

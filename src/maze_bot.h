@@ -74,7 +74,6 @@ bool obstacle_right();
 
 
 void follow_wall();
-float motor_base(float desired_dist);
 void speed_control(float motor_power);
 
 #endif

@@ -21,6 +21,8 @@ void follow_wall()
 
     // PID using left and right sensor
     float left_dist = read_sensor(L_SENSOR, L_GPIO1);
+    // float right_dist = read_sensor(FR_SENSOR, FR_GPIO1);
+    
     // Desired distance = mid_dist
     float mid_dist = (read_sensor(L_SENSOR, L_GPIO1) + read_sensor(FR_SENSOR, FR_GPIO1))/2.0; // TODO: Change FR to R when sensor is fixed
     error = mid_dist - left_dist;
@@ -45,15 +47,8 @@ void speed_control(float motor_power)
     speedR = constrain(speedR, MIN_SPEED, MAX_SPEED);
 
     Serial.println("SpeedL: " + String(speedL) + " SpeedR: " + String(speedR));
-
-    analogWrite(ENA, speedL);
-	analogWrite(ENB, speedR);
-
-    digitalWrite(IN1, HIGH);
-	digitalWrite(IN2, LOW);
-	digitalWrite(IN3, LOW);
-	digitalWrite(IN4, HIGH);
-
+    
+    forward(speedL, speedR);
 }
 
 bool obstacle_left()
@@ -124,17 +119,16 @@ float read_sensor(int SENSOR_PIN, int GPIO1_PIN)
     // digitalWrite(GPIO1_PIN, LOW); // Turn off sensor
 }
 
-void forward()
+void forward(int speedL, int speedR)
 {
-    analogWrite(ENA, 100);
-	analogWrite(ENB, 100);
+    analogWrite(ENA, speedL);
+	analogWrite(ENB, speedR);
 
 	// Turn on motor A & B
 	digitalWrite(IN1, HIGH);
 	digitalWrite(IN2, LOW);
 	digitalWrite(IN3, LOW);
 	digitalWrite(IN4, HIGH);
-	
 }
 
 void stop()

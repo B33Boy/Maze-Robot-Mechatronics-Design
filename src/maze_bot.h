@@ -33,7 +33,7 @@
 
 
 // PID
-#define DESIRED_DIST 18
+#define DESIRED_DIST 6
 #define FWD_VEL 120
 #define TURN_RATE 100
 
@@ -44,9 +44,15 @@
 #define MIN_SPEED 100
 #define MAX_SPEED 255
 
+// // Left wall following
+// #define KP 5
+// #define KI 0
+// #define KD 2
+
+// Double wall following
 #define KP 9
-#define KI 3
-#define KD 5
+#define KI 0.05
+#define KD 2
 
 extern float error;
 extern float error_sum;
@@ -64,7 +70,7 @@ const int SENSOR_SAMPLES = 15;
 // Declare Functions
 float read_sensor(int sensor_pin, int GPIO1PIN);
 void stop();
-void forward();
+void forward(int speedL, int speedR);
 void enc_r_isr();
 void enc_l_isr();
 

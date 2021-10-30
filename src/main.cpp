@@ -5,7 +5,16 @@
 
 void handler_isr()
 {
-    follow_wall();
+    if(read_sensor(FL_SENSOR, FL_GPIO1) <= COLLISION_DIST)
+    {
+        stop();
+        delay(5000);
+    }
+    else
+    {
+        follow_wall();
+    }
+    
 }
 
 void setup()
@@ -53,26 +62,12 @@ void setup()
 	Timer8.start(50000); // Calls every 50ms
     
 
+
 }
 
 void loop()
-{
-    // float l_sensor = read_sensor(L_SENSOR,  L_GPIO1);
-    // float r_sensor = read_sensor(R_SENSOR,  R_GPIO1);
-    // float fl_sensor = read_sensor(FL_SENSOR,  FL_GPIO1);
-    // float fr_sensor = read_sensor(FR_SENSOR,  FR_GPIO1);
-    // Serial.println("l_sensor:" + String(l_sensor)  + " fl_sensor:" + String(fl_sensor) + " fr_sensor:" + String(fr_sensor) + " r_sensor:" + String(r_sensor) );    
-    // Serial.println("r_sensor" + String(r_sensor));
-    // delay(250);
-
-    // Serial.println(String(obstacle_left()) + " " + String(obstacle_forward()) + " " + String(obstacle_right()));
-    
-    // follow_wall();
-    // forward();
-    // delay(50);
-
-    // stop();
-    // delay(4000);
+{    
 
 }
+
 

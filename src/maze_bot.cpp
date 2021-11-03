@@ -5,6 +5,8 @@
 // Extern Variable Definitions
 long enc_r_count = 0;
 long enc_l_count = 0;
+long positionLeft = -999;
+long positionRight = -999;
 
 float error = 0;
 float error_sum = 0;
@@ -12,6 +14,18 @@ float error_change = 0;
 float prev_error = 0;
 
 int speedL, speedR = 0;
+
+void turn_right()
+{   
+    drive(50, 1, 100, 1);
+    delay(400);
+}
+
+void turn_left()
+{
+
+}
+
 
 void follow_wall()
 {
@@ -46,9 +60,9 @@ void speed_control(float motor_power)
     speedL = constrain(speedL, MIN_SPEED, MAX_SPEED);
     speedR = constrain(speedR, MIN_SPEED, MAX_SPEED);
 
-    Serial.println("SpeedL: " + String(speedL) + " SpeedR: " + String(speedR));
+    //Serial.println("SpeedL: " + String(speedL) + " SpeedR: " + String(speedR));
     
-    forward(speedL, speedR);
+    drive(speedL, 1, speedR, 1);
 }
 
 bool obstacle_left()
@@ -80,9 +94,9 @@ bool obstacle_forward()
 
 bool obstacle_right()
 {
-    float reading1 = read_sensor(FR_SENSOR, FR_GPIO1);
+    float reading1 = read_sensor(R_SENSOR, R_GPIO1);
     // delay(10);
-    float reading2 = read_sensor(FR_SENSOR, FR_GPIO1);
+    float reading2 = read_sensor(R_SENSOR, R_GPIO1);
 
 
     if (reading1 < COLLISION_DIST && reading2 < COLLISION_DIST)
@@ -118,17 +132,35 @@ float read_sensor(int SENSOR_PIN, int GPIO1_PIN)
 
     // digitalWrite(GPIO1_PIN, LOW); // Turn off sensor
 }
-
-void forward(int speedL, int speedR)
+// dir1 = 0 ==> backward, dir1 = 1 ==> forward
+void drive(int speedL, int ldir, int speedR, int rdir)
 {
     analogWrite(ENA, speedL);
 	analogWrite(ENB, speedR);
 
-	// Turn on motor A & B
-	digitalWrite(IN1, HIGH);
-	digitalWrite(IN2, LOW);
-	digitalWrite(IN3, LOW);
-	digitalWrite(IN4, HIGH);
+    if (ldir)
+    {
+        digitalWrite(IN1, HIGH);
+    	digitalWrite(IN2, LOW);
+    }
+    else
+    {
+        digitalWrite(IN1, LOW);
+    	digitalWrite(IN2, HIGH);
+    }
+
+    if (rdir)
+    {
+        digitalWrite(IN3, LOW);
+        digitalWrite(IN4, HIGH);
+    }
+    else
+    {
+        digitalWrite(IN3, HIGH);
+        digitalWrite(IN4, LOW);
+    }
+	
+
 }
 
 void stop()

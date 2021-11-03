@@ -2,18 +2,45 @@
 #include <Servo.h>
 #include "maze_bot.h"
 #include <DueTimer.h>
+#include <Encoder.h>
+
+Encoder leftWheel(ENC_R_CH_A, ENC_R_CH_B);
+Encoder rightWheel(ENC_L_CH_A, ENC_L_CH_B);
 
 void handler_isr()
 {
-    if(read_sensor(FL_SENSOR, FL_GPIO1) <= COLLISION_DIST)
+    if (read_sensor(FL_SENSOR, FL_GPIO1) <= COLLISION_DIST && read_sensor(L_SENSOR, L_GPIO1) > 10)
+    {
+        turn_right();
+    }
+    else if(read_sensor(FL_SENSOR, FL_GPIO1) <= COLLISION_DIST)
     {
         stop();
-        delay(5000);
     }
     else
     {
         follow_wall();
+
     }
+
+    // long newLeft, newRight;
+    // newLeft = leftWheel.read();
+    // newRight = rightWheel.read();
+
+    // if (newLeft != positionLeft || newRight != positionRight) 
+    // {
+    //     // Serial.print("Left = " + String(newLeft) + ", Right = " + String(newRight) + "\n");
+    //     positionLeft = newLeft;
+    //     positionRight = newRight;
+    // }
+
+}
+
+void encoder_isr()
+{
+    positionLeft = leftWheel.read();
+    positionRight = rightWheel.read();
+    Serial.println(String(String(positionLeft) + " " + String(positionRight)));
     
 }
 
@@ -58,16 +85,22 @@ void setup()
     // When program starts, turn off all motors 
     stop();
 
+    // Encoder counts
+    leftWheel.write(0);
+    rightWheel.write(0);
+
     Timer8.attachInterrupt(handler_isr);
 	Timer8.start(50000); // Calls every 50ms
     
+    // Timer7.attachInterrupt(encoder_isr);
+    // Timer7.start(25000);
 
 
 }
 
 void loop()
 {    
-
+    positionLeft = leftWheel.read();
+    positionRight = rightWheel.read();
+    Serial.println(String(String(positionLeft) + " " + String(positionRight)));
 }
-
-

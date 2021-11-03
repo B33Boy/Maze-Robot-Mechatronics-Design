@@ -19,7 +19,7 @@ const int SENSOR_SAMPLES=15;
 
 // Declare Functions
 
-float read_sensor(int sensor_pin);
+float read_sensor(int sensor_pin, int GPIO1PIN);
 
 void setup()
 {
@@ -35,6 +35,8 @@ void setup()
 
     pinMode(R_SENSOR, OUTPUT); // Right Sensor
     pinMode(R_GPIO1, OUTPUT); // Enable Pin
+
+    Serial.begin(9600);
 
 }
 
@@ -78,5 +80,6 @@ float read_sensor(int sensor_pin, int GPIO1PIN)
     // Uncomment the following line for raw data
     // return sensor_sum/SENSOR_SAMPLES;
 
-    digitalWrite(GPIO1PIN, LOW); // Turn off sensor
+    // digitalWrite(GPIO1PIN, LOW); // Turn off sensor
 }
+

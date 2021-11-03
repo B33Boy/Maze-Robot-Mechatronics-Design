@@ -12,12 +12,12 @@
 #define IN4 13
 
 // Motor R Encoder
-#define ENC_R_CH_A 56
-#define ENC_R_CH_B 57
+#define ENC_R_CH_A 5//56
+#define ENC_R_CH_B 4//57
 
 // Motor L Encoder
-#define ENC_L_CH_A 55
-#define ENC_L_CH_B 54
+#define ENC_L_CH_A 2//55
+#define ENC_L_CH_B 3//54
 
 // Sensors
 #define L_SENSOR A7
@@ -50,7 +50,7 @@
 // #define KD 2
 
 // Double wall following
-#define KP 9
+#define KP 5
 #define KI 0.05
 #define KD 2
 
@@ -64,20 +64,26 @@ extern int speedL, speedR;
 // Global Variables
 extern long enc_r_count;
 extern long enc_l_count;
+
+extern long positionLeft; 
+extern long positionRight; 
+
 const int SENSOR_SAMPLES = 15;
 
 
 // Declare Functions
 float read_sensor(int sensor_pin, int GPIO1PIN);
 void stop();
-void forward(int speedL, int speedR);
+void drive(int speedL, int ldir, int speedR, int rdir);
 void enc_r_isr();
 void enc_l_isr();
+
+void turn_right();
+void turn_left();
 
 bool obstacle_left();
 bool obstacle_forward();
 bool obstacle_right();
-
 
 void follow_wall();
 void speed_control(float motor_power);

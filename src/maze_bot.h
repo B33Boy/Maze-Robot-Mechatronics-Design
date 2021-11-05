@@ -37,12 +37,15 @@
 #define FWD_VEL 120
 #define TURN_RATE 100
 
-#define COLLISION_DIST 10
+#define COLLISION_DIST 8
 #define MAX_SPEED_DIFF 40
 #define SPEED_CORRECTION 50
 
-#define MIN_SPEED 100
-#define MAX_SPEED 255
+#define MIN_SPEED 60
+#define MAX_SPEED 140
+
+#define DIST_BW_WHEELS 10
+#define OFFSET_TURN 0.5
 
 // // Left wall following
 // #define KP 5
@@ -50,9 +53,9 @@
 // #define KD 2
 
 // Double wall following
-#define KP 5
+#define KP 9
 #define KI 0.05
-#define KD 2
+#define KD 4
 
 extern float error;
 extern float error_sum;
@@ -70,7 +73,6 @@ extern long positionRight;
 
 const int SENSOR_SAMPLES = 15;
 
-
 // Declare Functions
 float read_sensor(int sensor_pin, int GPIO1PIN);
 void stop();
@@ -78,14 +80,21 @@ void drive(int speedL, int ldir, int speedR, int rdir);
 void enc_r_isr();
 void enc_l_isr();
 
+void reset_encoders();
+float get_rightWheel();
+float get_leftWheel();
+
+
 void turn_right();
 void turn_left();
+void drive_forward();
 
 bool obstacle_left();
 bool obstacle_forward();
 bool obstacle_right();
 
-void follow_wall();
+void follow_wall_dual();
 void speed_control(float motor_power);
+
 
 #endif

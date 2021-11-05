@@ -3,25 +3,94 @@
 #include "maze_bot.h"
 #include <DueTimer.h>
 #include <Encoder.h>
+// #include <stack> 
 
-Encoder leftWheel(ENC_R_CH_A, ENC_R_CH_B);
-Encoder rightWheel(ENC_L_CH_A, ENC_L_CH_B);
+
+// Path: 1 = right, 0 = ignore, -1 = left
+int path [11] = {-1, -1, 1, 1, 1, 1, 1, 1, -1, 0, -1};
+int i = 0;
+
+boolean specialCase()
+{
+    // Basically if its not a wall 
+    Serial.println(String(read_sensor(L_SENSOR, L_GPIO1)) + " | " + String(read_sensor(FL_SENSOR, FL_GPIO1)) + " | " + String(read_sensor(FR_SENSOR, FR_GPIO1)));
+    if (read_sensor(L_SENSOR, L_SENSOR) > 20 || read_sensor(FR_SENSOR, FR_GPIO1) > 20)
+    {
+        return true;
+    }
+
+    return false;
+}
+
+void wastereads()
+{
+    for (int i =0; i< 10; i++)
+    {
+        Serial.println(String(read_sensor(L_SENSOR, L_GPIO1)) + " | " + String(read_sensor(FL_SENSOR, FL_GPIO1)) + " | " + String(read_sensor(FR_SENSOR, FR_GPIO1)));
+    }
+    Serial.println("FUCKKKKKKKKKK");
+    
+}
 
 void handler_isr()
 {
-    if (read_sensor(FL_SENSOR, FL_GPIO1) <= COLLISION_DIST && read_sensor(L_SENSOR, L_GPIO1) > 10)
-    {
-        turn_right();
-    }
-    else if(read_sensor(FL_SENSOR, FL_GPIO1) <= COLLISION_DIST)
-    {
-        stop();
-    }
-    else
-    {
-        follow_wall();
+    // Serial.print("Left = " + String(get_leftWheel()) + ", Right = " + String(get_rightWheel()) + "\n");
+    // Serial.println(String(read_sensor(L_SENSOR, L_GPIO1)) + " " + String(read_sensor(FL_SENSOR, FL_GPIO1)) + " " + String(read_sensor(FR_SENSOR, FR_GPIO1)));
+    // if (read_sensor(L_SENSOR, L_GPIO1) > 15 && read_sensor(FL_SENSOR, FL_GPIO1) < 12 && read_sensor(FR_SENSOR, FR_GPIO1) < 12) 
+    // {
+    //     turn_left();
+    // }
+    // else if(read_sensor(FL_SENSOR, FL_GPIO1) <= COLLISION_DIST)
+    // {
+    //     stop();
+    // }
+    
+    // Serial.println(String(read_sensor(L_SENSOR, L_GPIO1)) + " | " + String(read_sensor(FL_SENSOR, FL_GPIO1)) + " | " + String(read_sensor(FR_SENSOR, FR_GPIO1)));
+    
 
+    if (specialCase())
+    {
+        Serial.println("Special Case");
+        // Timer.stop();
+        if (path[i] == 0)
+        {   
+            Serial.println("GAP");
+            drive_forward();
+            i++;
+        }
+        else if (path[i] == -1)
+        {   
+            Serial.println("LEFT OPEN");
+            turn_left();
+            i++;
+        }
+        else if (path[i] == 1)
+        {   
+            Serial.println("RIGHT OPEN");
+            turn_right();
+            i++;
+        }
+        // Timer.start(50000);
     }
+    else 
+    {
+        follow_wall_dual();
+        
+    }
+
+
+
+
+    // if(read_sensor(FL_SENSOR, FL_GPIO1) <= COLLISION_DIST)
+    // {
+    //     stop();
+    //     delay(5000);
+    // }
+    // else 
+    // {
+    //     follow_wall_dual();
+    // }   
+
 
     // long newLeft, newRight;
     // newLeft = leftWheel.read();
@@ -36,13 +105,13 @@ void handler_isr()
 
 }
 
-void encoder_isr()
-{
-    positionLeft = leftWheel.read();
-    positionRight = rightWheel.read();
-    Serial.println(String(String(positionLeft) + " " + String(positionRight)));
+// void encoder_isr()
+// {
+//     positionLeft = leftWheel.read();
+//     positionRight = rightWheel.read();
+//     Serial.println(String(String(positionLeft) + " " + String(positionRight)));
     
-}
+// }
 
 void setup()
 {
@@ -85,22 +154,50 @@ void setup()
     // When program starts, turn off all motors 
     stop();
 
-    // Encoder counts
-    leftWheel.write(0);
-    rightWheel.write(0);
+    // // Encoder counts
+    // leftWheel.write(0);
+    // rightWheel.write(0);
+    reset_encoders();
 
-    Timer8.attachInterrupt(handler_isr);
-	Timer8.start(50000); // Calls every 50ms
-    
-    // Timer7.attachInterrupt(encoder_isr);
-    // Timer7.start(25000);
-
-
+//    Timer8.attachInterrupt(handler_isr);
+//    Timer8.start(50000); // Calls every 50ms
+    delay(2000);
+    wastereads();
 }
 
+
+
 void loop()
-{    
-    positionLeft = leftWheel.read();
-    positionRight = rightWheel.read();
-    Serial.println(String(String(positionLeft) + " " + String(positionRight)));
+{   
+    Serial.println(String(read_sensor(L_SENSOR, L_GPIO1)) + " | " + String(read_sensor(FL_SENSOR, FL_GPIO1)) + " | " + String(read_sensor(FR_SENSOR, FR_GPIO1)));
+
+    if (specialCase())
+    {
+        Serial.println("Special Case");
+        // Timer.stop();
+        if (path[i] == 0)
+        {   
+            Serial.println("GAP");
+            drive_forward();
+            i++;
+        }
+        else if (path[i] == -1)
+        {   
+            Serial.println("LEFT OPEN");
+            turn_left();
+            i++;
+        }
+        else if (path[i] == 1)
+        {   
+            Serial.println("RIGHT OPEN");
+            turn_right();
+            i++;
+        }
+        // Timer.start(50000);
+    }
+    else 
+    {
+        follow_wall_dual();
+        
+    }
 }

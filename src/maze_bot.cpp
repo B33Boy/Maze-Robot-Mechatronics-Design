@@ -1,5 +1,6 @@
 #include "maze_bot.h"
 #include <Arduino.h>
+#include <Encoder.h>
 
 
 // Extern Variable Definitions
@@ -15,19 +16,62 @@ float prev_error = 0;
 
 int speedL, speedR = 0;
 
+Encoder leftWheel(ENC_R_CH_A, ENC_R_CH_B);
+Encoder rightWheel(ENC_L_CH_A, ENC_L_CH_B);
+
+
+
+void reset_encoders()
+{
+    rightWheel.write(0);
+    leftWheel.write(0);
+}
+
+float get_rightWheel()
+{
+    return rightWheel.read() * 0.00343; //+ 0.0591;
+}
+
+float get_leftWheel()
+{
+    return leftWheel.read() * 0.00335; //+ 1.11;
+}
+
 void turn_right()
 {   
-    drive(50, 1, 100, 1);
-    delay(400);
+    reset_encoders();
+
+    while (get_leftWheel() < (PI*0.5*DIST_BW_WHEELS))
+    {
+        drive(50, 1, 0, 1);
+    }
 }
 
 void turn_left()
 {
+    reset_encoders();
+    // while (get_leftWheel() < (PI*0.25*DIST_BW_WHEELS - OFFSET_TURN))
+    // {
+    //     drive(60, 0,60, 1);
+    // }
 
+    while (get_rightWheel() < (PI*0.5*DIST_BW_WHEELS))
+    {
+        drive(0, 1, 50, 1);
+    }
+}
+
+void drive_forward()
+{
+    reset_encoders();
+    while (get_rightWheel() < 20 && get_leftWheel() < 20)
+    {
+        drive(50, 1, 50, 1);
+    }
 }
 
 
-void follow_wall()
+void follow_wall_dual()
 {
     // // PID using left sensor
     // float left_dist = read_sensor(L_SENSOR, L_GPIO1);
@@ -60,7 +104,7 @@ void speed_control(float motor_power)
     speedL = constrain(speedL, MIN_SPEED, MAX_SPEED);
     speedR = constrain(speedR, MIN_SPEED, MAX_SPEED);
 
-    //Serial.println("SpeedL: " + String(speedL) + " SpeedR: " + String(speedR));
+    // Serial.println("SpeedL: " + String(speedL) + " SpeedR: " + String(speedR));
     
     drive(speedL, 1, speedR, 1);
 }

@@ -20,7 +20,6 @@ Encoder leftWheel(ENC_R_CH_A, ENC_R_CH_B);
 Encoder rightWheel(ENC_L_CH_A, ENC_L_CH_B);
 
 
-
 void reset_encoders()
 {
     rightWheel.write(0);
@@ -37,15 +36,6 @@ float get_leftWheel()
     return leftWheel.read() * 0.00335; //+ 1.11;
 }
 
-void turn_right()
-{   
-    reset_encoders();
-
-    while (get_leftWheel() < (PI*0.5*DIST_BW_WHEELS))
-    {
-        drive(50, 1, 0, 1);
-    }
-}
 
 void turn_left()
 {
@@ -55,19 +45,56 @@ void turn_left()
     //     drive(60, 0,60, 1);
     // }
 
-    while (get_rightWheel() < (PI*0.5*DIST_BW_WHEELS))
+    while(get_leftWheel() < 15 && get_rightWheel() < 15)
     {
-        drive(0, 1, 50, 1);
+        drive(80, 1, 80, 1);
     }
+    
+    // while (get_rightWheel() < (PI*0.5*DIST_BW_WHEELS))
+    // {
+    //     drive(0, 1, 50, 1);
+    // }
+    stop();
+    reset_encoders();
+
+    while (abs(get_rightWheel()) < (PI*0.5*5 + OFFSET_TURN_LEFT))
+    {
+        drive(80, 0, 80, 1);
+    }
+    stop();
+
 }
+
+void turn_right()
+{   
+    reset_encoders();
+
+    while(get_leftWheel() < 15 && get_rightWheel() < 15)
+    {
+        drive(80, 1, 80, 1);
+    }
+
+    stop();
+    reset_encoders();
+    
+
+    while (abs(get_leftWheel()) < (PI*0.5*5 + OFFSET_TURN_RIGHT))
+    {
+        drive(80, 1, 80, 0);
+    }
+    stop();
+}
+
+
 
 void drive_forward()
 {
     reset_encoders();
     while (get_rightWheel() < 20 && get_leftWheel() < 20)
     {
-        drive(50, 1, 50, 1);
+        drive(80, 1, 80, 1);
     }
+    stop();
 }
 
 
@@ -109,45 +136,71 @@ void speed_control(float motor_power)
     drive(speedL, 1, speedR, 1);
 }
 
-bool obstacle_left()
+bool space_left()
 {
     float reading1 = read_sensor(L_SENSOR, L_GPIO1);
-    // delay(10);
+    delay(20);
     float reading2 = read_sensor(L_SENSOR, L_GPIO1);
+    delay(20);
+    float reading3 = read_sensor(L_SENSOR, L_GPIO1);
+    delay(20);
+    float reading4 = read_sensor(L_SENSOR, L_GPIO1);
 
-    if (reading1 < COLLISION_DIST && reading2 < COLLISION_DIST)
+
+    if (reading1 > 15 && reading2 > 15  && reading3 > 15  && reading4 > 15 )
     {
         return true;
     }
     return false;
+
 }
+
+bool space_right()
+{
+    float reading1 = read_sensor(FR_SENSOR, FR_GPIO1);
+    delay(20);
+    float reading2 = read_sensor(FR_SENSOR, FR_GPIO1);
+    delay(20);
+    float reading3 = read_sensor(FR_SENSOR, FR_GPIO1);
+    delay(20);
+    float reading4 = read_sensor(FR_SENSOR, FR_GPIO1);
+
+
+    if (reading1 > SPACE_RIGHT && reading2 > SPACE_RIGHT  && reading3 > SPACE_RIGHT  && reading4 > SPACE_RIGHT )
+    {
+        return true;
+    }
+    return false;
+
+}
+
 
 bool obstacle_forward()
 {
     float reading1 = read_sensor(FL_SENSOR, FL_GPIO1);
-    // delay(10);
+    delay(20);
     float reading2 = read_sensor(FL_SENSOR, FL_GPIO1);
+    delay(20);
+    float reading3 = read_sensor(FL_SENSOR, FL_GPIO1);
+    delay(20);
+    float reading4 = read_sensor(FL_SENSOR, FL_GPIO1);
 
 
-    if (reading1 < COLLISION_DIST && reading2 < COLLISION_DIST)
+    if (reading1 < COLLISION_DIST && reading2 < COLLISION_DIST  && reading3 < COLLISION_DIST  && reading4 < COLLISION_DIST )
     {
         return true;
     }
     return false;
 }
 
-bool obstacle_right()
+void back_up()
 {
-    float reading1 = read_sensor(R_SENSOR, R_GPIO1);
-    // delay(10);
-    float reading2 = read_sensor(R_SENSOR, R_GPIO1);
-
-
-    if (reading1 < COLLISION_DIST && reading2 < COLLISION_DIST)
+    reset_encoders();
+    while (get_rightWheel() > -20 && get_leftWheel() > -20)
     {
-        return true;
+        drive(80, 0, 80, 0);
     }
-    return false;
+    stop();
 }
 
 float read_sensor(int SENSOR_PIN, int GPIO1_PIN)
@@ -182,7 +235,7 @@ void drive(int speedL, int ldir, int speedR, int rdir)
     analogWrite(ENA, speedL);
 	analogWrite(ENB, speedR);
 
-    if (ldir)
+    if (rdir)
     {
         digitalWrite(IN1, HIGH);
     	digitalWrite(IN2, LOW);
@@ -193,7 +246,7 @@ void drive(int speedL, int ldir, int speedR, int rdir)
     	digitalWrite(IN2, HIGH);
     }
 
-    if (rdir)
+    if (ldir)
     {
         digitalWrite(IN3, LOW);
         digitalWrite(IN4, HIGH);

@@ -37,7 +37,7 @@
 #define FWD_VEL 120
 #define TURN_RATE 100
 
-#define COLLISION_DIST 8
+#define COLLISION_DIST 6
 #define MAX_SPEED_DIFF 40
 #define SPEED_CORRECTION 50
 
@@ -45,7 +45,11 @@
 #define MAX_SPEED 140
 
 #define DIST_BW_WHEELS 10
-#define OFFSET_TURN 0.5
+#define OFFSET_TURN_LEFT 0.6
+#define OFFSET_TURN_RIGHT 0.5
+
+#define SPACE_RIGHT 20
+#define SPACE_LEFT 20
 
 // // Left wall following
 // #define KP 5
@@ -88,10 +92,12 @@ float get_leftWheel();
 void turn_right();
 void turn_left();
 void drive_forward();
+void back_up();
 
-bool obstacle_left();
+bool space_left();
+bool space_right();
 bool obstacle_forward();
-bool obstacle_right();
+
 
 void follow_wall_dual();
 void speed_control(float motor_power);

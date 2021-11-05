@@ -3,11 +3,11 @@
 #include "maze_bot.h"
 #include <DueTimer.h>
 #include <Encoder.h>
-// #include <stack> 
 
 
 // Path: 1 = right, 0 = ignore, -1 = left
-int path [11] = {-1, -1, 1, 1, 1, 1, 1, 1, -1, 0, -1};
+int path [12] = {-1, -1, 1, 1, 1, 1, 1, 1, -1, 0, -1, 999};
+int rev_path [12] = {1, 0, 1, -1, -1, -1, -1, -1, -1, 1, 1, 999};
 int i = 0;
 
 boolean specialCase()
@@ -48,36 +48,51 @@ void handler_isr()
     // Serial.println(String(read_sensor(L_SENSOR, L_GPIO1)) + " | " + String(read_sensor(FL_SENSOR, FL_GPIO1)) + " | " + String(read_sensor(FR_SENSOR, FR_GPIO1)));
     
 
-    if (specialCase())
-    {
-        Serial.println("Special Case");
-        // Timer.stop();
-        if (path[i] == 0)
-        {   
-            Serial.println("GAP");
-            drive_forward();
-            i++;
-        }
-        else if (path[i] == -1)
-        {   
-            Serial.println("LEFT OPEN");
-            turn_left();
-            i++;
-        }
-        else if (path[i] == 1)
-        {   
-            Serial.println("RIGHT OPEN");
-            turn_right();
-            i++;
-        }
-        // Timer.start(50000);
-    }
-    else 
-    {
-        follow_wall_dual();
+    // Serial.println(String(read_sensor(L_SENSOR, L_GPIO1)) + " | " + String(read_sensor(FL_SENSOR, FL_GPIO1)) + " | " + String(read_sensor(FR_SENSOR, FR_GPIO1)));
+    // if (obstacle_forward() && path[i] != 999)
+    // {
         
-    }
+    // }
+    // else if(path[i] == 999) // reached the end
+    // {
+    //     // Do gripper stuff
+    //     // Turn 360 degrees
+    //     // Get reverse path
+    //     back_up();
+    // }
+    // else
+    // {
+    //     if (specialCase())
+    //     {
+    //         Serial.println("Special Case");
+    //         // Timer.stop();
+    //         if (path[i] == 0)
+    //         {   
+    //             Serial.println("GAP");
+    //             drive_forward();
+    //             i++;
+    //         }
+    //         else if (path[i] == -1)
+    //         {   
+    //             Serial.println("LEFT OPEN");
+    //             turn_left();
+    //             i++;
+    //         }
+    //         else if (path[i] == 1)
+    //         {   
+    //             Serial.println("RIGHT OPEN");
+    //             turn_right();
+    //             i++;
+    //         }
+    //         // Timer.start(50000);
+    //     }
+    //     else 
+    //     {
+    //         follow_wall_dual();
+            
+    //     }
 
+    // }
 
 
 
@@ -153,15 +168,11 @@ void setup()
     
     // When program starts, turn off all motors 
     stop();
-
-    // // Encoder counts
-    // leftWheel.write(0);
-    // rightWheel.write(0);
     reset_encoders();
 
 //    Timer8.attachInterrupt(handler_isr);
 //    Timer8.start(50000); // Calls every 50ms
-    delay(2000);
+    delay(1000);
     wastereads();
 }
 
@@ -170,34 +181,93 @@ void setup()
 void loop()
 {   
     Serial.println(String(read_sensor(L_SENSOR, L_GPIO1)) + " | " + String(read_sensor(FL_SENSOR, FL_GPIO1)) + " | " + String(read_sensor(FR_SENSOR, FR_GPIO1)));
+    if (obstacle_forward() && path[i] != 999)
+    {
+        back_up();
+        delay(1000);
+        i--;
+    }
+    else if(path[i] == 999) // reached the end
+    {
+        // // Do gripper stuff
+        // // Turn 360 degrees
 
-    if (specialCase())
-    {
-        Serial.println("Special Case");
-        // Timer.stop();
-        if (path[i] == 0)
-        {   
-            Serial.println("GAP");
-            drive_forward();
-            i++;
-        }
-        else if (path[i] == -1)
-        {   
-            Serial.println("LEFT OPEN");
-            turn_left();
-            i++;
-        }
-        else if (path[i] == 1)
-        {   
-            Serial.println("RIGHT OPEN");
-            turn_right();
-            i++;
-        }
-        // Timer.start(50000);
-    }
-    else 
-    {
-        follow_wall_dual();
+        // while (abs(get_leftWheel()) < (0.5*PI*DIST_BW_WHEELS))
+        // {
+        //     drive(80, 1, 80, 0);
+        // }
+        // stop();
         
+        // // Get reverse path
+        // if (specialCase())
+        // {
+        //     Serial.println("Special Case");
+        //     if (rev_path[i] == 0)
+        //     {   
+        //         Serial.println("GAP");
+        //         drive_forward();
+        //         i++;
+        //         delay(1000);
+        //     }
+        //     else if (rev_path[i] == -1)
+        //     {   
+        //         Serial.println("LEFT OPEN");
+        //         turn_left();
+        //         i++;
+        //         delay(1000);
+        //     }
+        //     else if (rev_path[i] == 1)
+        //     {   
+        //         Serial.println("RIGHT OPEN");
+        //         turn_right();
+        //         i++;
+        //         delay(1000);
+        //     }
+        // }
+        // else 
+        // {
+        //     follow_wall_dual();
+            
+        // }
+
     }
+    else
+    {
+        if (specialCase())
+        {
+            Serial.println("Special Case");
+            if (path[i] == 0)
+            {   
+                Serial.println("GAP");
+                drive_forward();
+                i++;
+                delay(1000);
+            }
+            else if (path[i] == -1)
+            {   
+                Serial.println("LEFT OPEN");
+                turn_left();
+                i++;
+                delay(1000);
+            }
+            else if (path[i] == 1)
+            {   
+                Serial.println("RIGHT OPEN");
+                turn_right();
+                i++;
+                delay(1000);
+            }
+        }
+        else 
+        {
+            follow_wall_dual();
+            
+        }
+    }
+
+
+    // turn_left();
+    // delay(2000);
+    // turn_right();
+    // delay(1000);
 }
